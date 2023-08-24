@@ -10,7 +10,6 @@ const User = require('./models/user')
 const bodyParser = require('body-parser')
 
 
-
 // 加入這段 code, 僅在非正式環境時, 使用 dotenv
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -31,8 +30,12 @@ db.once('open', () => {
   console.log('mongodb connected!')
 })
 
+//setting handlebars
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
+
+// setting static files
+app.use(express.static('public'))
 
 // 用 app.use 規定每一筆請求都需要透過 body-parser 進行前置處理
 app.use(bodyParser.urlencoded({ extended: true }))

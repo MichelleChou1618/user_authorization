@@ -1,0 +1,21 @@
+<div class="container">
+  <h2>Account Login</h2>
+  <form action="/login" method="POST">
+    <div>
+      <input type="email" id="email" name="email" placeholder="Email" required>
+    </div>
+    <div>
+      <input type="password" id="pwd" name="pwd" placeholder="Password" required>
+    </div>
+
+    {{!-- {{#if <variable>}} ... {{/if}} 是 Handlebars 提供我們若要在 HTML 中使用判斷式的寫法。這裡的意思是如果伺服器的 error 有內容的話，再把裡面的
+      HTML < div> ... < /div> 顯示出來，若無內容則不顯示。 --}}
+          {{#if error}}
+          <div class="alert alert-info" role="alert">
+            <span class="mr-2">{{error}}</span>
+          </div>
+          {{/if}}
+
+    <button id="submit-btn" type="submit" class="btn btn-primary">Sign in</button>
+  </form>
+</div>

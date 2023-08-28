@@ -37,3 +37,8 @@ ctrl + c
 - Express-Handlebars 4.0.2
 - MongoDB
 - mongoose 5.9.7
+- cookie-parser 1.4.6
+- uuid 9.0.0
+
+# Reference
+- [add session-cookie authentication](https://www.sohamkamani.com/nodejs/session-cookie-authentication/) 

@@ -1,1 +1,16 @@
+{{#if name}}
+
 <h2>Welcome back, {{name}}!</h2>
+
+{{else}}
+
+<h2>{{errormessage}}</h2>
+<div class="text-center">
+  <a href="/">
+    <button type="button" class="btn btn-outline-secondary">
+      Re-login
+    </button>
+  </a>
+</div>
+
+{{/if}}

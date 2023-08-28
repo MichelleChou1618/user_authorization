@@ -1,16 +1,9 @@
-// 載入 express 並建構應用程式伺服器
+// 引用 Express 與 Express 路由器
 const express = require('express')
-const app = express()
-const exphbs = require('express-handlebars')
+const router = express.Router()
 
 // 載入 User model
-const User = require('./models/user')
-
-// 引用 body-parser
-const bodyParser = require('body-parser')
-
-// 引用 cookie-parser
-const cookieParser = require('cookie-parser')
+const User = require('../../models/user')
 
 //引用uuid
 const uuid = require('uuid')
@@ -31,62 +24,14 @@ class Session {
 // this object stores the users sessions. For larger scale applications, you can use a database or cache for this purpose
 const sessions = {}
 
-// refactor: 引用路由器: 引入路由器時，路徑設定為 /routes 就會自動去尋找目錄下叫做 index 的檔案
-const routes = require('./routes')
-
-
-//refactor: 將mongoose連線設定抽離app.js,再從app.js引用設定檔:對 app.js 而言，Mongoose 連線設定只需要「被執行」，不需要接到任何回傳參數繼續利用，所以這裡不需要再設定變數
-require('./config/mongoose')
-
-
-/*
-// 加入這段 code, 僅在非正式環境時, 使用 dotenv
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
-}
-// 載入 mongoose
-const mongoose = require('mongoose')
-// 設定連線到 mongoDB
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-
-// 取得資料庫連線狀態
-const db = mongoose.connection
-// 連線異常
-db.on('error', () => {
-  console.log('mongodb error!')
-})
-// 連線成功
-db.once('open', () => {
-  console.log('mongodb connected!')
-})
-*/
-
-//setting handlebars
-app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
-app.set('view engine', 'hbs')
-
-// setting static files
-app.use(express.static('public'))
-
-// 用 app.use 規定每一筆請求都需要透過 body-parser 進行前置處理
-app.use(bodyParser.urlencoded({ extended: true }))
-
-//使用cookie-parser取得req.coockies的資訊
-app.use(cookieParser())
-
-// refactor: 將 request 導入路由器
-app.use(routes)
-
-
-/*
 // 設定首頁路由
-app.get('/', (req, res) => {
+router.get('/', (req, res) => {
   res.render('login')
 })
 
 
 // 設定login路由
-app.post('/login', (req, res) => {
+router.post('/login', (req, res) => {
   //console.log("req.body: ", req.body)
   //取得表單資訊
   const { email, pwd } = req.body
@@ -137,15 +82,15 @@ app.post('/login', (req, res) => {
 })
 
 // 設定welcome路由
-app.get('/welcome', (req, res) => {
-  
+router.get('/welcome', (req, res) => {
+
   console.log(req.cookies)
   //Authenticating Users Through Session Cookies:
   // if this request doesn't have any cookies, that means it isn't authenticated. 
   if (!req.cookies) {
     console.log(" no session_token cookie along with the request (which means that the requestor hasn’t logged in)")
     let errormessage = "Login first."
-    res.render('welcome', {errormessage:errormessage})
+    res.render('welcome', { errormessage: errormessage })
     return
   }
 
@@ -170,7 +115,7 @@ app.get('/welcome', (req, res) => {
   }
   // if the session has expired, delete the session from our map
   if (userSession.isExpired()) {
-    
+
     console.log("the session has expired")
     delete sessions[sessionToken]
     let errormessage = "Authentication Expired.Re-login again."
@@ -184,7 +129,7 @@ app.get('/welcome', (req, res) => {
 })
 
 // 設定refresh路由
-app.post('/refresh', (req, res) => {
+router.post('/refresh', (req, res) => {
 
   console.log(req.cookies)
   //Refreshing Session Tokens:
@@ -240,7 +185,7 @@ app.post('/refresh', (req, res) => {
   // set the session token to the new value we generated, with a
   // renewed expiration time
   res.cookie("session_token", newSessionToken, { expires: expiresAt })
-  
+
 
   // If all checks have passed, we can consider the user authenticated and send a welcome message
   res.render('welcome', { name: userSession.username })
@@ -249,7 +194,7 @@ app.post('/refresh', (req, res) => {
 
 
 //Logging Out Our Users
-app.get('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
 
   if (!req.cookies) {
     console.log(" no session_token cookie along with the request (which means that the requestor hasn’t logged in)")
@@ -274,9 +219,6 @@ app.get('/logout', (req, res) => {
 
 })
 
-*/
 
-// 設定 port 3000
-app.listen(3000, () => {
-  console.log('App is running on http://localhost:3000')
-})
+// 匯出路由模組
+module.exports = router

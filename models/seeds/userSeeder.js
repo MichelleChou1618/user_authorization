@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+//const mongoose = require('mongoose')
+const db = require('../../config/mongoose') //引用mongoose設定檔
 const User = require('../user') // 載入 User model
 const users = [
   {
@@ -28,6 +29,7 @@ const users = [
   }
 ]
 
+/*
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
@@ -37,6 +39,8 @@ const db = mongoose.connection
 db.on('error', () => {
   console.log('mongodb error!')
 })
+*/
+// 連線成功
 db.once('open', () => {
   console.log('mongodb connected!')
   //將users新增至資料庫
